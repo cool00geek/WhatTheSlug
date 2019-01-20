@@ -9,7 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.channels.Channels;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,9 +22,20 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
+
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsInputChannel;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+//import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.appengine.tools.cloudstorage.RetryParams;
 
 @WebServlet("/database")
 public class database extends HttpServlet {
+
+    private static final int BUFFER_SIZE = 2 * 1024 * 1024;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // reading the user input
@@ -35,6 +49,36 @@ public class database extends HttpServlet {
         System.out.println("Event Time: " + event_time);
         System.out.println("Event loca: " + event_loc);
         System.out.println("Event Room: " + event_room);
+
+        response.sendRedirect("/");
+
+        response.setContentType("text/html;charset=UTF-8");
+        // Allocate a output writer to write the response message into the network socket
+        PrintWriter out = response.getWriter();
+
+        // Write the response message, in an HTML page
+        try {
+            out.println("<!DOCTYPE html>");
+            out.println("<html><head>");
+            out.println("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
+            out.println("<title>Hello, World</title></head>");
+            out.println("<body>");
+            out.println("<p>Request URI: " + event_name + "</p>");
+            out.println("<p>Protocol: " + event_date + "</p>");
+            out.println("<p>PathInfo: " + event_time + "</p>");
+            out.println("<p>Remote Address: " + event_loc + "</p>");
+            // Generate a random number upon each request
+            out.println("<p>A Random Number: <strong>" + event_room + "</strong></p>");
+            out.println("<p>Now for the cool stuff</p>");
+            Scanner scanner = new Scanner(new File("data.csv"));
+            while (scanner.hasNextLine()) {
+                out.println("<p>" + scanner.nextLine() + "</p>");
+            }
+            out.println("</body>");
+            out.println("</html>");
+        } finally {
+            out.close();  // Always close the output writer
+        }
 
         try {
             event_date = checkDate(event_date);
@@ -54,11 +98,16 @@ public class database extends HttpServlet {
         }
 
         // TODO Add to db
-        uploadData(event_name,event_date, event_time, event_loc, event_room);
+        //uploadData(event_name,event_date, event_time, event_loc, event_room);
+        try {
+            saveToCsv(event_name, event_date, event_time, event_loc, event_room);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         // https://examples.javacodegeeks.com/enterprise-java/servlet/java-servlet-sendredirect-example/
-        response.sendRedirect("/#success");
+        //response.sendRedirect("/#success");
     }
 
     private static String amPm(String amPm) {
@@ -239,5 +288,54 @@ public class database extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void saveToCsv(String name, String date, String time, String loc, String room) throws IOException, InterruptedException {
+
+
+        ProcessBuilder pb = new ProcessBuilder("curl", "52.183.97.242:54213",
+                "-H",
+                "Content-Type: application/json",
+                "--data", "{\"name\":\"" + name + "\", \"date\":\"" + date + "\", \"time\":\"" + time + "\", \"location\":\"" + loc + "\", \"room\":\"" + room + "\"}");
+
+        Process p;
+        try {
+            p = pb.start();
+            InputStream is = p.getInputStream();
+            InputStream errorStream = p.getErrorStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            BufferedReader br = new BufferedReader(new InputStreamReader(errorStream));
+            String strLine = "";
+            while ((strLine = br.readLine()) != null) {
+                System.out.println(strLine);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void copy(InputStream input, OutputStream output) throws IOException {
+        try {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead = input.read(buffer);
+            while (bytesRead != -1) {
+                output.write(buffer, 0, bytesRead);
+                bytesRead = input.read(buffer);
+            }
+        } finally {
+            input.close();
+            output.close();
+        }
+    }
+
+    private GcsFilename getFileName(HttpServletRequest req) {
+        String[] splits = req.getRequestURI().split("/", 4);
+        if (!splits[0].equals("") || !splits[1].equals("gcs")) {
+            throw new IllegalArgumentException("The URL is not formed as expected. " +
+                    "Expecting /gcs/<bucket>/<object>");
+        }
+        return new GcsFilename(splits[2], splits[3]);
     }
 }

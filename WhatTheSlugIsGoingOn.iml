@@ -33,6 +33,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="com.zaxxer:HikariCP:3.3.0" level="project" />
-    <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
+    <orderEntry type="library" name="google-api-services-storage-v1-rev141-1.25.0" level="project" />
   </component>
 </module>

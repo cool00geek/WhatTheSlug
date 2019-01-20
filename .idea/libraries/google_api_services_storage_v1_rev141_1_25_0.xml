@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="google-api-services-storage-v1-rev141-1.25.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/google-api-services-storage-v1-rev141-1.25.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/appengine-gcs-client-0.8.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/guava-27.0.1-jre.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/joda-time-2.10.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

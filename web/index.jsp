@@ -59,9 +59,11 @@
 <table id="eventTable">
     <tr>
         <td class="tableText">
-            <p class="eventName">Event 1</p>
+            <p class="eventName">CruzHacks</p>
             <br>
-            Date: 01/20/19 at 7:30PM
+            Date: 01/20/19 at 8:00 AM
+            <br>
+            Stevenson Event Center
         </td>
         <td class="tableText">
             <button class="likeBtn">
@@ -75,9 +77,29 @@
     </tr>
     <tr>
         <td class="tableText">
-            <p class="eventName">Event 2</p>
+            <p class="eventName">Concert: Ozomatli</p>
             <br>
-            Date: 01/21/19 at 8:30PM
+            Date: 01/20/19 at 8:00PM
+            <br>
+            Catalyst
+        </td>
+        <td class="tableText">
+            <button class="likeBtn">
+                Like!
+            </button>
+            <br>
+            <button class="dislikeBtn">
+                Dislike!
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td class="tableText">
+            <p class="eventName">Concert: The Melvins</p>
+            <br>
+            Date: 01/20/19 at 9:00PM
+            <br>
+            Catalyst
         </td>
         <td class="tableText">
             <button class="likeBtn">
