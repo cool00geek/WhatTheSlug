@@ -197,7 +197,7 @@ public class database extends HttpServlet {
 
 // For Java users, the Cloud SQL JDBC Socket Factory can provide authenticated connections.
 // See https://github.com/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory for details.
-        config.setDriverClassName("org.hsqldb.jdbc.JDBCDriver");
+        config.setDriverClassName("com.mysql.jdbc.Driver");
         config.addDataSourceProperty("socketFactory", "com.google.cloud.sql.mysql.SocketFactory");
         config.addDataSourceProperty("cloudSqlInstance", "whattheslugisgoingon:us-west2:whattheslugisgoingon");
         config.addDataSourceProperty("useSSL", "false");

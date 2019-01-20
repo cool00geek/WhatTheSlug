@@ -8,7 +8,9 @@
           <element id="module-output" name="WhatTheSlugIsGoingOn" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="com.zaxxer:HikariCP:3.3.0" />
+          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client:1.21.0" />
+          <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:3.3.0" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.38" />
         </element>
       </element>
     </root>
