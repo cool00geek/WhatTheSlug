@@ -5,6 +5,25 @@ function initMapOld() {
     // The map, centered at UCSC
     var map = new google.maps.Map(
         document.getElementById('map'), {zoom: 15, center: ucsc});
+
+    var cat1 = new google.maps.Marker({
+        position: new google.maps.LatLng(36.9713135, -122.0255766),
+        map: map,
+        title: 'Concert: Ozomatli'
+    });
+
+    var cat2 = new google.maps.Marker({
+        position: new google.maps.LatLng(36.9713135, -122.0255766),
+        map: map,
+        title: 'Concert: The Melvins'
+    });
+
+    var stev = new google.maps.Marker({
+        position: new google.maps.LatLng( 36.9969607, -122.0522113),
+        map: map,
+        title: 'CruzHacks'
+    });
+
     // The marker, positioned at UCSC
     //var marker = new google.maps.Marker({position: ucsc, map: map});
 }
